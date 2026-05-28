@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResourceMan - Shoelanders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .app-container { display: flex; width: 100%; height: 100vh; overflow: hidden; }
+        .sidebar { flex-shrink: 0; width: 256px; }
+        .main-content { flex: 1; overflow-y: auto; }
+        .page { max-width: 100%; margin: 0; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: 0; top: 0; height: 100%; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 999; }
+            .sidebar-overlay.active { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-container">
+                    <div class="brand-logo">RM</div>
+                    <div>
+                        <h1 class="brand-title">ResourceMan</h1>
+                        <p class="brand-subtitle">Gibson Shoes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-nav-wrapper">
+                <div id="sidebar-nav-container"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="page active">
+                <h1 style="margin-bottom: 32px;">Shoelanders Best Collection</h1>
+                <div id="shoelanders-grid" class="grid-shoes"></div>
+            </div>
+
+            <div id="shoe-modal" class="modal-overlay hidden">
+                <div class="modal-container">
+                    <div class="modal-media"><img id="modal-shoe-image" src=""></div>
+                    <div class="modal-details">
+                        <div>
+                            <button onclick="closeShoeModal()" class="close-btn">×</button>
+                            <h2 id="modal-shoe-name"></h2>
+                            <div class="price-row-modal"><p id="modal-shoe-price"></p><span id="price-status-badge" class="badge-status"></span></div>
+                            <p id="modal-shoe-desc" class="modal-desc-text"></p>
+                        </div>
+                        <div class="modal-footer-action">
+                            <div class="modal-quantity-row">
+                                <label for="modal-quantity">Qty</label>
+                                <input id="modal-quantity" type="number" min="1" value="1" class="modal-quantity-input">
+                            </div>
+                            <button id="modal-buy-btn" onclick="addToCart()" class="btn-action">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cancel-reason-modal" class="modal-overlay hidden">
+                <div class="reason-box">
+                    <h2 style="color: var(--danger); font-size: 24px;"><i class="fas fa-exclamation-circle"></i> Cancel Order</h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Please help us understand why you want to cancel this order.</p>
+                    <div class="reason-options">
+                        <label class="reason-item"><input type="radio" name="cancel-reason" value="Changed my mind" checked><span>I changed my mind / Don't like it anymore</span></label>
+                        <label class="reason-item"><input type="radio" name="cancel-reason" value="Incorrect size/color"><span>Ordered incorrect size or color</span></label>
+                        <label class="reason-item"><input type="radio" name="cancel-reason" value="Found better price"><span>Found a better price elsewhere</span></label>
+                        <label class="reason-item"><input type="radio" name="cancel-reason" value="Shipping delay"><span>Expected delivery time is too long</span></label>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button onclick="closeCancelModal()" class="btn-sync" style="background: transparent; border: 1px solid var(--border-color);">Keep Order</button>
+                        <button onclick="confirmCancelOrder()" class="btn-action" style="background-color: var(--danger); color: #fff; flex: 1; justify-content: center; padding: 12px;">Confirm Cancellation</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="payment-modal" class="modal-overlay hidden">
+                <div class="reason-box">
+                    <h2 style="color: var(--primary); font-size: 24px;"><i class="fas fa-credit-card"></i> Payment Method</h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Choose your preferred way to pay for your items.</p>
+                    <div class="reason-options">
+                        <label class="reason-item"><input type="radio" name="payment-method" value="GCash" checked><span>GCash (Digital Wallet)</span></label>
+                        <label class="reason-item"><input type="radio" name="payment-method" value="COD"><span>Cash on Delivery (COD)</span></label>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button onclick="closePaymentModal()" class="btn-sync" style="background: transparent; border: 1px solid var(--border-color);">Back to Cart</button>
+                        <button onclick="confirmCheckoutWithPayment()" class="btn-action" style="flex: 1; justify-content: center; padding: 12px;">Confirm & Place Order</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="toast" class="toast-popup hidden">Action completed</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="r4.js"></script>
+</body>
+</html>
+

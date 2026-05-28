@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResourceMan - Gibson Shoes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Force the layout to collapse into 2 columns (Sidebar + Main) 
+           and ensure main content fills the remaining width. */
+        .app-container { display: flex; width: 100%; height: 100vh; overflow: hidden; }
+        .sidebar { flex-shrink: 0; width: 256px; }
+        .main-content { flex: 1; overflow-y: auto; }
+        
+        /* Remove restricted width to allow the 'View' to fill the right side */
+        .page { 
+            max-width: 100%; 
+            margin: 0; 
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: 0; top: 0; height: 100%; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 999; }
+            .sidebar-overlay.active { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="app-container">
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-container">
+                    <div class="brand-logo">RM</div>
+                    <div>
+                        <h1 class="brand-title">ResourceMan</h1>
+                        <p class="brand-subtitle">Gibson Shoes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-nav-wrapper">
+                <nav>
+                    <a onclick="navigateTo(1)" id="nav-1" class="nav-item active">
+                        <i class="fas fa-home"></i>
+                        <span>My ResourceMan</span>
+                        <div class="nav-group-title">Account</div>
+                    </a>    
+                    <a onclick="navigateTo(2)" id="nav-2-account" class="nav-item">
+                        <i class="fas fa-bullseye"></i>
+                        <span>Vision & Mission</span>
+                     
+                    </a>
+                    <a onclick="navigateTo(3)" id="nav-3" class="nav-item">
+                        <i class="fas fa-shoe-prints"></i>
+                        <span>Our Shoes</span>
+                    </a>
+                    <a onclick="navigateTo(6)" id="nav-6" class="nav-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>Shoelanders</span>
+                    </a>
+                    <a onclick="navigateTo(7)" id="nav-7" class="nav-item">
+                        <i class="fas fa-star"></i>
+                        <span>Marikina Premium Collection</span>
+                    </a>
+                    <a onclick="navigateTo(8)" id="nav-8" class="nav-item">
+                        <i class="fas fa-hard-hat"></i>
+                        <span>PPE's</span>
+                    </a>
+                    <a onclick="navigateTo(4)" id="nav-4" class="nav-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Technologies</span>
+                    </a>
+                    <a onclick="navigateTo(5)" id="nav-5" class="nav-item">
+                        <i class="fas fa-boxes-stacked"></i>
+                        <span>Other Products</span>
+                    </a>
+                    <a onclick="navigateTo(9)" id="nav-9" class="nav-item">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>More products</span>
+                    
+                    </a>
+
+
+                    <a onclick="navigateTo(20)" id="nav-20" class="nav-item">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                    </a>
+                    <a onclick="navigateTo(21)" id="nav-21" class="nav-item">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Create Account</span>
+                    </a>
+                    <a onclick="navigateTo(10)" id="nav-10" class="nav-item">
+                        <i class="fas fa-user-shield"></i>
+                        <span id="nav-portal-text">Profile</span>
+                    </a>
+                    
+                    <a onclick="navigateTo(11)" id="nav-11" class="nav-item hidden-admin-nav">
+                        <i class="fas fa-database"></i>
+                        <span>Admin Terminal</span>
+                    </a>
+
+                    <a onclick="navigateTo(12)" id="nav-12" class="nav-item hidden-admin-nav">
+                        <i class="fas fa-user-gear"></i>
+                        <span>Admin Product Manager</span>
+                    </a>
+                </nav>
+            </div>
+        </div> <!-- Added missing closing tag for sidebar -->
+        
+        <div class="main-content">
+
+            <div id="page-1" class="page">
+                <h1>Welcome to My ResourceMan</h1>
+                <p class="page-subtitle">Premium Gibson Shoes • Engineered for Performance</p>
+                
+                <div class="grid-split-2">
+                    <div class="panel-box">
+                        <img id="hero-image" src="https://picsum.photos/id/1015/800/600" alt="Gibson Shoes" class="hero-img">
+                        <div class="panel-padding">
+                            <h2>Gibson Elite Collection Safety Shoes</h2>
+                            <p style="color: var(--text-muted); margin-top: 12px; margin-bottom: 24px; line-height: 1.6;">Discover our latest collection of premium footwear designed for comfort and style.</p>
+                            <button onclick="navigateTo(3)" class="btn-action">
+                                Shop Collection <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-stack">
+                        <div class="panel-box panel-padding">
+                            <h3>Featured This Week</h3>
+                            <div class="thumbnail-row">
+                                <div onclick="viewShoe(1)" class="thumb-item">
+                                    <img src="https://picsum.photos/id/201/300/300">
+                                    <p class="thumb-title">Urban Runner X1</p>
+                                </div>
+                                <div onclick="viewShoe(2)" class="thumb-item">
+                                    <img src="https://picsum.photos/id/237/300/300">
+                                    <p class="thumb-title">Trail Master Pro</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gradient-banner">
+                            <h3 style="font-weight: 800;">Join the ResourceMan Community</h3>
+                            <p style="margin-top: 12px; font-weight: 500; line-height: 1.5;">Get exclusive access, early drops, and member-only discounts.</p>
+                            <button onclick="handleProfileWidgetClick()" class="btn-action">Sign Up Free</button>
+                            <div style="margin-top: 16px; display:flex; gap: 12px; align-items:center; justify-content: center;">
+                                <a href="https://www.paylrm.com" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:10px; padding: 14px 22px; border-radius: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.12); color: #fff; font-weight: 700;">
+                                    <i class="fas fa-wallet"></i> Pay via GCash
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Shared modals + toast for r4.js (keep on home to avoid missing DOM errors) -->
+    <div id="shoe-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-media">
+                <img id="modal-shoe-image" src="">
+            </div>
+            <div class="modal-details">
+                <div>
+                    <button onclick="closeShoeModal()" class="close-btn">×</button>
+                    <h2 id="modal-shoe-name"></h2>
+
+                    <div class="price-row-modal">
+                        <p id="modal-shoe-price"></p>
+                        <span id="price-status-badge" class="badge-status"></span>
+                    </div>
+
+                    <p id="modal-shoe-desc" class="modal-desc-text"></p>
+                </div>
+
+                <div class="modal-footer-action">
+                    <div class="modal-quantity-row">
+                        <label for="modal-quantity">Qty</label>
+                        <input id="modal-quantity" type="number" min="1" value="1" class="modal-quantity-input">
+                    </div>
+                    <button id="modal-buy-btn" onclick="addToCart()" class="btn-action">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cancel-reason-modal" class="modal-overlay hidden">
+        <div class="reason-box">
+            <h2 style="color: var(--danger); font-size: 24px;"><i class="fas fa-exclamation-circle"></i> Cancel Order</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Please help us understand why you want to cancel this order.</p>
+
+            <div class="reason-options">
+                <label class="reason-item">
+                    <input type="radio" name="cancel-reason" value="Changed my mind" checked>
+                    <span>I changed my mind / Don't like it anymore</span>
+                </label>
+                <label class="reason-item">
+                    <input type="radio" name="cancel-reason" value="Incorrect size/color">
+                    <span>Ordered incorrect size or color</span>
+                </label>
+                <label class="reason-item">
+                    <input type="radio" name="cancel-reason" value="Found better price">
+                    <span>Found a better price elsewhere</span>
+                </label>
+                <label class="reason-item">
+                    <input type="radio" name="cancel-reason" value="Shipping delay">
+                    <span>Expected delivery time is too long</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button onclick="closeCancelModal()" class="btn-sync" style="background: transparent; border: 1px solid var(--border-color);">Keep Order</button>
+                <button onclick="confirmCancelOrder()" class="btn-action" style="background-color: var(--danger); color: #fff; flex: 1; justify-content: center; padding: 12px;">Confirm Cancellation</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="modal-overlay hidden">
+        <div class="reason-box">
+            <h2 style="color: var(--primary); font-size: 24px;"><i class="fas fa-credit-card"></i> Payment Method</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Choose your preferred way to pay for your items.</p>
+
+            <div class="reason-options">
+                <label class="reason-item">
+                    <input type="radio" name="payment-method" value="GCash" checked>
+                    <span>GCash (Digital Wallet)</span>
+                </label>
+                <label class="reason-item">
+                    <input type="radio" name="payment-method" value="COD">
+                    <span>Cash on Delivery (COD)</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button onclick="closePaymentModal()" class="btn-sync" style="background: transparent; border: 1px solid var(--border-color);">Back to Cart</button>
+                <button onclick="confirmCheckoutWithPayment()" class="btn-action" style="flex: 1; justify-content: center; padding: 12px;">Confirm & Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast-popup hidden">Action completed</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="r4.js"></script>
+</body>
+</html>

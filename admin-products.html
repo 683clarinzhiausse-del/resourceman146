@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResourceMan - Admin Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .app-container { display: flex; width: 100%; height: 100vh; overflow: hidden; }
+        .sidebar { flex-shrink: 0; width: 256px; }
+        .main-content { flex: 1; overflow-y: auto; }
+        .page { max-width: 100%; margin: 0; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: 0; top: 0; height: 100%; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 999; }
+            .sidebar-overlay.active { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-container">
+                    <div class="brand-logo">RM</div>
+                    <div>
+                        <h1 class="brand-title">ResourceMan</h1>
+                        <p class="brand-subtitle">Gibson Shoes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-nav-wrapper">
+                <div id="sidebar-nav-container"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="page active">
+                <div id="admin-product-view" class="hidden">
+                    <div class="hub-banner admin-banner">
+                        <div>
+                            <span class="hub-tag admin-hub-tag"><i class="fas fa-bag-shopping"></i> Admin Product Manager</span>
+                            <h2 style="margin-top: 8px; font-weight: 900;">Change Pricing & Add Products</h2>
+                            <p style="color: var(--text-muted); margin-top: 4px;">Update prices and manage product catalog (Shoes, Technologies, Other Products). Changes apply instantly for this browser.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel-box panel-padding" style="margin-top: 18px;">
+                        <h3 style="margin-bottom: 12px; color: var(--primary);"><i class="fas fa-wrench"></i> Update Pricing</h3>
+
+                        <div class="grid-split-2">
+                            <div>
+                                <label class="form-label">Product Type</label>
+                                <select id="admin-price-type" class="form-input">
+                                    <option value="shoe">Gibson Elite Collection</option>
+                                    <option value="shoelander">Shoelanders Best Collection</option>
+                                    <option value="marikina">Marikina's Premium Shoe Collection</option>
+                                    <option value="ppe">PPE's Personal Protective</option>
+                                    <option value="technology">Technologies</option>
+                                    <option value="product">Other Products</option>
+                                    <option value="more-products">More Products & Services</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Lookup by (ID or Name)</label>
+                                <select id="admin-price-lookup-mode" class="form-input">
+                                    <option value="id">ID</option>
+                                    <option value="name">Name</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Lookup Value</label>
+                                <input id="admin-price-lookup-value" class="form-input" placeholder="e.g., 1 or 'Urban Runner X1'">
+                            </div>
+
+                            <div>
+                                <label class="form-label">New Price</label>
+                                <input id="admin-price-new" class="form-input" placeholder="e.g., 2499 or ₱2,499">
+                            </div>
+
+                            <div>
+                                <label class="form-label">New Description (optional)</label>
+                                <textarea id="admin-price-desc-new" class="form-input form-textarea" rows="3" placeholder="Optional. Leave blank to keep existing."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="form-label">New Image URL (optional)</label>
+                                <input id="admin-price-image-new" class="form-input" placeholder="Optional. Leave blank to keep existing.">
+                                <div style="margin-top: 8px;">
+                                    <label class="form-label" style="margin-bottom:0;">Or upload Image File (optional)</label>
+                                    <input id="admin-price-image-file" type="file" accept="image/*" class="form-input" style="padding: 8px;" onchange="handleAdminImageUpload('update')">
+                                    <div style="margin-top: 8px; display:flex; gap:10px; align-items:center;">
+                                        <img id="admin-price-image-preview" alt="Preview" style="width: 54px; height: 54px; object-fit: cover; border-radius: 8px; background: var(--surface-secondary);">
+                                        <span id="admin-price-image-filename" style="color: var(--text-muted); font-size: 12px;">No file selected</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="grid-column: 1 / -1;">
+                                <button onclick="adminUpdateProductPrice()" class="btn-action" style="width: 100%;">Update</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-box panel-padding" style="margin-top: 18px;">
+                        <h3 style="margin-bottom: 12px; color: var(--primary);"><i class="fas fa-plus-circle"></i> Add New Product</h3>
+
+                        <div class="grid-split-2">
+                            <div>
+                                <label class="form-label">Product Type</label>
+                                <select id="admin-add-type" class="form-input">
+                                    <option value="shoe">Gibson Elite Collection</option>
+                                    <option value="shoelander">Shoelanders Best Collection</option>
+                                    <option value="marikina">Marikina's Premium Shoe Collection</option>
+                                    <option value="ppe">PPE's Personal Protective</option>
+                                    <option value="technology">Technologies</option>
+                                    <option value="product">Other Products</option>
+                                    <option value="more-products">More Products & Services</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="form-label">New ID</label>
+                                <input id="admin-add-id" class="form-input" placeholder="e.g., 13 or tech-7 or other-4 (leave blank to auto-generate)">
+                            </div>
+
+                            <div>
+                                <label class="form-label">New Name</label>
+                                <input id="admin-add-name" class="form-input" placeholder="Product name">
+                            </div>
+
+                            <div>
+                                <label class="form-label">New Price</label>
+                                <input id="admin-add-price" class="form-input" placeholder="e.g., 2999 or ₱3,299">
+                            </div>
+
+                            <div>
+                                <label class="form-label">New Image URL (optional)</label>
+                                <input id="admin-add-image" class="form-input" placeholder="Optional. Leave blank for placeholder.">
+                                <div style="margin-top: 8px;">
+                                    <label class="form-label" style="margin-bottom:0;">Or upload Image File (optional)</label>
+                                    <input id="admin-add-image-file" type="file" accept="image/*" class="form-input" style="padding: 8px;" onchange="handleAdminImageUpload('add')">
+                                    <div style="margin-top: 8px; display:flex; gap:10px; align-items:center;">
+                                        <img id="admin-add-image-preview" alt="Preview" style="width: 54px; height: 54px; object-fit: cover; border-radius: 8px; background: var(--surface-secondary);">
+                                        <span id="admin-add-image-filename" style="color: var(--text-muted); font-size: 12px;">No file selected</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="form-label">New Description (optional)</label>
+                                <textarea id="admin-add-desc" class="form-input form-textarea" rows="3" placeholder="Optional."></textarea>
+                            </div>
+
+                            <div style="grid-column: 1 / -1;">
+                                <button onclick="adminAddProduct()" class="btn-action" style="width: 100%;">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="toast" class="toast-popup hidden">Action completed</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="r4.js"></script>
+</body>
+</html>
+
